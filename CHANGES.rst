@@ -5,7 +5,27 @@ Here you can see the full list of changes between each SQLAlchemy-Continuum rele
 
 Unreleased changes
 ^^^^^^^^^^^^^^^^^^
-- None currently
+- TODO
+
+1.7.0 (2026-07-02)
+^^^^^^^^^^^^^^^^^^
+- Drop Python 3.9 support (EOL October 2025); the minimum supported Python is now 3.10
+- Modernize codebase to Python 3.10+ syntax (PEP 604 unions, built-in generics, plain dicts instead of ``OrderedDict``)
+- Migrate documentation from Sphinx/reStructuredText to `Zensical <https://zensical.org>`_ (Markdown + mkdocstrings)
+- Fix broken user guide examples (``session.commit(article)``, ``sync_trigger(conn, ...)``, ``Transaction.query``, ``create_session`` removed in SQLAlchemy 2.0) and add ``tests/test_user_guide_examples.py`` to keep documented examples working
+- Remove a leftover ``breakpoint()`` call in ``TransactionChangesPlugin``
+- Fix latent ``AttributeError`` in ``VersioningManager.append_association_operation``
+- Expand ruff lint rules (E/W/F/I/B/C4/UP) and drop the separate pyupgrade pre-commit hook
+- Move test/dev/docs dependencies to PEP 735 ``[dependency-groups]``; package extras are now user-facing only (``flask``, ``flask-login``, ``flask-sqlalchemy``)
+- Publish to PyPI via GitHub Actions trusted publishing on GitHub releases
+- Add Dependabot (GitHub Actions, uv lockfile, pre-commit hooks), issue/PR templates, CONTRIBUTING.md and SECURITY.md
+
+1.6.0 (2026-01-22)
+^^^^^^^^^^^^^^^^^^
+- Add ``version_at()`` class method on version objects for efficient retrieval of the version active at a specific transaction (#376)
+- Add ``all_versions()`` class method with ``link`` option to batch fetch all versions for an entity in a single query, avoiding N+1 queries by pre-populating previous/next navigation caches (#376)
+- Add automatic composite indexes on version tables for optimized version lookups: ``(pk_columns, transaction_id DESC)`` index and ``(pk_columns, transaction_id, end_transaction_id)`` for validity strategy temporal queries (#376)
+- Add ``create_composite_index`` configuration option to control composite index creation (#376)
 
 1.5.2 (2025-10-10)
 ^^^^^^^^^^^^^^^^^^

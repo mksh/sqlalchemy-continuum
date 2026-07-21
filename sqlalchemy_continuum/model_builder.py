@@ -3,9 +3,8 @@ from copy import copy
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import column_property
-from ._compat import get_declarative_base
 
-from .utils import adapt_columns, option
+from .utils import adapt_columns, declarative_base_resolver, option
 from .version import VersionClassBase
 
 
@@ -31,7 +30,7 @@ def get_base_class(manager, model):
     """
     Returns all base classes for history model.
     """
-    return option(model, 'base_classes') or (get_declarative_base(model),)
+    return option(model, 'base_classes') or (declarative_base_resolver(model),)
 
 
 def version_base(manager, parent_cls, base_class_factory=None):
@@ -236,10 +235,8 @@ class ModelBuilder:
         args.update(self.get_inherited_denormalized_columns(table))
 
         if self.manager.options.get('use_module_name', True):
-            name = '{}{}Version'.format(
-                self.model.__module__.title().replace('.', ''),
-                self.model.__name__,
-            )
+            module = self.model.__module__.title().replace('.', '')
+            name = f'{module}{self.model.__name__}Version'
         else:
             name = f'{self.model.__name__}Version'
         return type(name, self.base_classes(), args)
